@@ -745,8 +745,16 @@ static void evaluate_paths(struct bgp_nexthop_cache *bnc)
 			bnc_is_valid_nexthop =
 				bgp_isvalid_labeled_nexthop(bnc) ? 1 : 0;
 		} else {
-			bnc_is_valid_nexthop =
-				bgp_isvalid_nexthop(bnc) ? 1 : 0;
+			if (bgp_update_martian_nexthop(
+				    bnc->bgp, afi, safi, path->type,
+				    path->sub_type, path->attr, rn)) {
+				zlog_debug(
+					"Prefix %pRN, ignoring path due to martian or self-next-hop",
+					rn);
+			} else {
+				bnc_is_valid_nexthop =
+					bgp_isvalid_nexthop(bnc) ? 1 : 0;
+			}
 		}
 
 		if (BGP_DEBUG(nht, NHT))
