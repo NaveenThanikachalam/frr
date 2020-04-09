@@ -284,6 +284,7 @@ typedef struct rib_table_info_t_ {
 	struct zebra_vrf *zvrf;
 	afi_t afi;
 	safi_t safi;
+	uint32_t table_id;
 
 } rib_table_info_t;
 
@@ -474,6 +475,14 @@ static inline struct route_table *rib_dest_table(rib_dest_t *dest)
 static inline struct zebra_vrf *rib_dest_vrf(rib_dest_t *dest)
 {
 	return rib_table_info(rib_dest_table(dest))->zvrf;
+}
+
+/*
+ * rib_dest_table_id
+ */
+static inline uint32_t rib_dest_table_id(rib_dest_t *dest)
+{
+	return rib_table_info(rib_dest_table(dest))->table_id;
 }
 
 /*
